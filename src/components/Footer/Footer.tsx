@@ -71,7 +71,7 @@ export const Footer = () => {
               xs={4}
               justifyContent="center"
               alignSelf="center"
-              sx={{ color: theme.palette.common.white, marginTop: '20px' }}
+              sx={{ color: theme.palette.common.black, marginTop: '20px' }}
             >
               <Typography variant="h6" align="center" gutterBottom>
                 © All rights reserved
