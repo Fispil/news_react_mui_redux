@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { MainPage } from './pages/MainPage';
+import { NewsPage } from './pages/NewsPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { User } from './types/User';
 
-function App() {
+const App = () => {
+  const [user, setUser] = useState<User>({
+    login: '',
+    password: ''
+  });
+  const [userIsLogged, setUserIsLogged] = useState<boolean>(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MainPage
+              user={user}
+              onUserChange={setUser}
+              userIsLogged={userIsLogged}
+              onUserIsLogged={setUserIsLogged}
+            />
+          }
+        />
+        <Route
+          path="/news"
+          element={
+            <NewsPage
+              user={user}
+              onUserChange={setUser}
+              userIsLogged={userIsLogged}
+              onUserIsLogged={setUserIsLogged}
+            />
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProfilePage
+              user={user}
+              onUserChange={setUser}
+              userIsLogged={userIsLogged}
+              onUserIsLogged={setUserIsLogged}
+            />
+          }
+        />
+      </Routes>
+    </>
   );
-}
+};
 
 export default App;
