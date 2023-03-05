@@ -28,7 +28,7 @@ export const PopUpMenu = () => {
   const classes = useStyles();
 
   return (
-    <Box sx={{ marginTop: '20px', color: theme.palette.error }}>
+    <Box sx={{ color: theme.palette.error }}>
       <Button
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}

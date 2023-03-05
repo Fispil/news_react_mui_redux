@@ -1,3 +1,22 @@
+# Perhaps you cant load the news page, one of the reasons is the exceeded call limit, it takes a day to restore the limit.
+# The technologies main I used in this project are React, Redux, MUI, axios, typescript. List of all technologies with versions are below:
+    axios": "^1.3.3",
+    gh-pages": "^5.0.0",
+    i18next": "^22.4.10",
+    markdown-to-jsx": "^7.1.9",
+    react": "^18.2.0",
+    react-dom": "^18.2.0",
+    react-i18next": "^12.2.0",
+    react-redux": "^8.0.5",
+    react-router-dom": "^6.8.1",
+    react-scripts": "5.0.1",
+    redux": "^4.2.1",
+    redux-devtools-extension": "^2.13.9",
+    redux-thunk": "^2.4.1",
+    typescript": "^4.9.5",
+    web-vitals": "^2.1.4"
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
