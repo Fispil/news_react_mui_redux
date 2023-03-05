@@ -24,7 +24,7 @@ export const Footer = () => {
       component="footer"
       style={{
         maxWidth: '100%',
-        backgroundColor: 'black',
+        backgroundColor: theme.palette.primary.dark,
         padding: '10px 0',
         boxSizing: 'border-box'
       }}
@@ -34,7 +34,7 @@ export const Footer = () => {
           <Grid container>
             <Grid item md={12} xs={8}>
               <BottomNavigation
-                sx={{ bgcolor: theme.palette.common.black }}
+                sx={{ bgcolor: theme.palette.primary.dark }}
                 showLabels
                 value={value}
                 onChange={(event, newValue) => {
@@ -76,7 +76,7 @@ export const Footer = () => {
               sx={{
                 color: theme.palette.common.white,
                 marginTop: '20px',
-                bgcolor: theme.palette.common.black
+                bgcolor: theme.palette.primary.dark
               }}
             >
               <Typography variant="h6" align="center" gutterBottom>
