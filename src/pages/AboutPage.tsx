@@ -4,26 +4,13 @@ import { Footer } from '../components/Footer/Footer';
 import { theme } from '../theme';
 import BreakingNewsImage from '../pictures/breaking_News.png';
 import { NewsReviewCard } from '../components/NewsCard';
-import { User } from '../types/User';
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-interface Props {
-  user: User;
-  onUserChange: (user: User) => void;
-  userIsLogged: boolean;
-  onUserIsLogged: (userIsLogged: boolean) => void;
-}
-
-export const MainPage: React.FC<Props> = ({ user, onUserChange, userIsLogged, onUserIsLogged }) => {
+export const AboutPage: React.FC = () => {
   return (
     <>
-      <Header
-        user={user}
-        onUserChange={onUserChange}
-        userIsLogged={userIsLogged}
-        onUserIsLogged={onUserIsLogged}
-      />
+      <Header />
       <main>
         <Paper
           sx={{

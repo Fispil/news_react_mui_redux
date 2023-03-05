@@ -1,0 +1,12 @@
+{
+  "menu": {
+    "menu": "Menu",
+    "home": "Home",
+    "news": "News",
+    "greetengs": "Hello, ",
+    "about": "About",
+    "contact": "Contact",
+    "signup": "Sign up",
+    "signin": "Sign in"
+  }
+}

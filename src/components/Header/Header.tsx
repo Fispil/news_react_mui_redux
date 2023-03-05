@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   AppBar,
   Toolbar,
@@ -6,83 +6,52 @@ import {
   Typography,
   Button,
   Box,
-  DialogTitle,
-  Dialog
+  MenuItem,
+  Select,
+  SelectChangeEvent
 } from '@mui/material';
-import {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  IconButton,
-  TextField
-} from '@material-ui/core';
-import MenuIcon from '@mui/icons-material/Menu';
 import { theme } from '../../theme';
 import { Link } from 'react-router-dom';
-import { User } from '../../types/User';
 import { LoggedProfile } from '../LoggedProfile';
+import { PopUpMenu } from '../PopUpMenu';
+import { useAppSelector } from '../../utilitys/hooks';
+import { useTranslation } from 'react-i18next';
 
-interface Props {
-  user: User;
-  onUserChange: (user: User) => void;
-  userIsLogged: boolean;
-  onUserIsLogged: (userIsLogged: boolean) => void;
-}
+export const Header: React.FC = () => {
+  const userLogin = useAppSelector((state) => state.user.login);
+  const userIsLogged = useAppSelector((state) => state.user.isLoggined);
+  const { t, i18n } = useTranslation();
 
-export const Header: React.FC<Props> = ({ user, onUserChange, userIsLogged, onUserIsLogged }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [login, setLogin] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleLoginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLogin(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const loginedUser = {
-      login: login,
-      password: password
-    };
-
-    onUserChange(loginedUser);
-    if (login === '123@123' && password === '12345') {
-      onUserIsLogged(true);
-    } else {
-      setLogin('');
-      setPassword('');
-      alert('Wrong loggin and password try again');
-    }
-    handleClose();
+  const handleLanguageChange = (event: SelectChangeEvent<unknown>) => {
+    i18n.changeLanguage(event.target.value as string);
   };
 
   return (
     <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', flexShrink: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 2 }}>
-            <IconButton edge="start" color="inherit" area-laabel="menu">
-              <MenuIcon />
-            </IconButton>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexShrink: 2,
+              justifyContent: 'space-between',
+              gap: '32px'
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <PopUpMenu />
 
-            <Typography variant="h6" sx={{ color: theme.palette.primary.light, flexShrink: 1 }}>
-              Menu
-            </Typography>
-          </Box>
+              <Typography variant="h6" sx={{ color: theme.palette.primary.light, flexShrink: 1 }}>
+                {t('menu.menu')}
+              </Typography>
+            </Box>
 
-          <Box sx={{ display: 'flex', gap: '20px', flexShrink: 2 }}>
             <Link
               to="/"
               style={{
@@ -91,7 +60,7 @@ export const Header: React.FC<Props> = ({ user, onUserChange, userIsLogged, onUs
                 fontSize: '20px'
               }}
             >
-              Home
+              {t('menu.home')}
             </Link>
             <Link
               to="/news"
@@ -101,10 +70,9 @@ export const Header: React.FC<Props> = ({ user, onUserChange, userIsLogged, onUs
                 fontSize: '20px'
               }}
             >
-              News
+              {t('menu.news')}
             </Link>
           </Box>
-
           <Box
             mr={3}
             sx={{
@@ -114,64 +82,47 @@ export const Header: React.FC<Props> = ({ user, onUserChange, userIsLogged, onUs
               flexShrink: 2
             }}
           >
+            <Select
+              labelId="language-switch-label"
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              sx={{ color: theme.palette.primary.light }}
+            >
+              <MenuItem value="eng">Eng</MenuItem>
+              <MenuItem value="uk">Укр</MenuItem>
+            </Select>
             {userIsLogged ? (
-              <LoggedProfile user={user} onUserChange={onUserChange} />
+              <>
+                <Typography>{`Hello, ${userLogin}`}</Typography>
+                <LoggedProfile />
+              </>
             ) : (
-              <Box>
-                <Button color="inherit" variant="outlined" onClick={handleClickOpen}>
-                  Log In
-                </Button>
-
-                <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                  <form onSubmit={handleSubmit}>
-                    <DialogTitle id="form-dialog-title">
-                      Please enter your login and password
-                    </DialogTitle>
-                    <DialogContent>
-                      <DialogContentText></DialogContentText>
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Email Adress"
-                        type="email"
-                        value={login}
-                        onChange={handleLoginChange}
-                        fullWidth
-                      />
-                      <TextField
-                        autoFocus
-                        value={password}
-                        onChange={handlePasswordChange}
-                        margin="dense"
-                        id="pass"
-                        label="Password"
-                        type="password"
-                        fullWidth
-                      />
-                    </DialogContent>
-                    <DialogActions>
-                      <Button color="primary" variant="outlined" onClick={handleClose}>
-                        Cancel
-                      </Button>
-                      <Button color="error" variant="outlined" type="submit">
-                        Log in
-                      </Button>
-                    </DialogActions>
-                  </form>
-                </Dialog>
-
-                <Button
-                  color="secondary"
-                  variant="contained"
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <Box
                   sx={{
-                    backgroundColor: theme.palette.error.main,
-                    marginLeft: theme.spacing(3),
-                    flexShrink: 2
+                    border: `1px solid ${theme.palette.primary.dark}`,
+                    borderRadius: '5px',
+                    backgroundColor: 'rgb(176,224,230)',
+                    color: 'black'
                   }}
                 >
-                  Sign Up
-                </Button>
+                  <Button component="a" href="#/signin" color="inherit">
+                    {t('menu.signin')}
+                  </Button>
+                </Box>
+
+                <Box
+                  sx={{
+                    border: `1px solid ${theme.palette.primary.dark}`,
+                    borderRadius: '5px',
+                    backgroundColor: 'rgb(220,20,60)',
+                    color: 'black'
+                  }}
+                >
+                  <Button component="a" href="#/signup" color="inherit">
+                    {t('menu.signup')}
+                  </Button>
+                </Box>
               </Box>
             )}
           </Box>

@@ -11,7 +11,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 
 const useStyles = makeStyles({
   label: {
-    color: 'white' // define the color you want to use for the label here
+    color: 'white'
   }
 });
 
@@ -20,14 +20,16 @@ export const Footer = () => {
   const classes = useStyles();
 
   return (
-    <footer
+    <Container
+      component="footer"
       style={{
-        marginTop: '60px',
+        maxWidth: '100%',
         backgroundColor: 'black',
-        padding: '20px'
+        padding: '10px 0',
+        boxSizing: 'border-box'
       }}
     >
-      <Box sx={{ flexGrow: 1 }} bgcolor={theme.palette.primary.dark}>
+      <Box sx={{ flexGrow: 1, py: 6 }} bgcolor={theme.palette.primary.dark} component="footer">
         <Container>
           <Grid container>
             <Grid item md={12} xs={8}>
@@ -71,7 +73,11 @@ export const Footer = () => {
               xs={4}
               justifyContent="center"
               alignSelf="center"
-              sx={{ color: theme.palette.common.black, marginTop: '20px' }}
+              sx={{
+                color: theme.palette.common.white,
+                marginTop: '20px',
+                bgcolor: theme.palette.common.black
+              }}
             >
               <Typography variant="h6" align="center" gutterBottom>
                 © All rights reserved
@@ -80,6 +86,6 @@ export const Footer = () => {
           </Grid>
         </Container>
       </Box>
-    </footer>
+    </Container>
   );
 };

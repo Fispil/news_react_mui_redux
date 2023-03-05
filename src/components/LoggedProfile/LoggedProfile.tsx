@@ -11,14 +11,8 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom';
-import { User } from '../../types/User';
 
-interface Props {
-  user: User;
-  onUserChange: (user: User) => void;
-}
-
-export const LoggedProfile: React.FC<Props> = ({ user, onUserChange }) => {
+export const LoggedProfile: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

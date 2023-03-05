@@ -1,56 +1,28 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { MainPage } from './pages/MainPage';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Blog } from './pages/BlogPage';
+import { AboutPage } from './pages/AboutPage';
 import { NewsPage } from './pages/NewsPage';
 import { ProfilePage } from './pages/ProfilePage';
-import { User } from './types/User';
+import { SignIn } from './pages/SignInPage';
+import { SignUp } from './pages/SignUp';
+import { useAppSelector } from './utilitys/hooks';
 
-const App = () => {
-  const [user, setUser] = useState<User>({
-    login: '',
-    password: ''
-  });
-  const [userIsLogged, setUserIsLogged] = useState<boolean>(false);
+export const App: React.FC = () => {
+  const userIsLogged = useAppSelector((state) => state.user.isLoggined);
 
   return (
-    <>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <MainPage
-              user={user}
-              onUserChange={setUser}
-              userIsLogged={userIsLogged}
-              onUserIsLogged={setUserIsLogged}
-            />
-          }
-        />
-        <Route
-          path="/news"
-          element={
-            <NewsPage
-              user={user}
-              onUserChange={setUser}
-              userIsLogged={userIsLogged}
-              onUserIsLogged={setUserIsLogged}
-            />
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProfilePage
-              user={user}
-              onUserChange={setUser}
-              userIsLogged={userIsLogged}
-              onUserIsLogged={setUserIsLogged}
-            />
-          }
-        />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/news" element={<NewsPage />} />
+      {userIsLogged ? (
+        <Route path="/profile" element={<ProfilePage />} />
+      ) : (
+        <Route path="/profile" element={<Navigate to="/" replace />} />
+      )}
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/" element={<Blog />} />
+    </Routes>
   );
 };
-
-export default App;
