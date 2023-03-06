@@ -1,6 +1,6 @@
 # Demolink
 https://fispil.github.io/news_react_mui_redux/
-# Perhaps you cant load the news page, one of the reasons is the exceeded call limit, it takes a day to restore the limit.
+# Perhaps you cant load the news page, one of the reasons is the exceeded call limit, it takes a day to restore the limit. Its look like this
 ![image](https://user-images.githubusercontent.com/110057267/223205976-46767f8a-9596-4fc1-b63c-eae726bc2790.png)
 
 # Login 123@123 Password 12345
