@@ -1,6 +1,7 @@
 # Demolink
     - [https://fispil.github.io/news_react_mui_redux/]
 # Perhaps you cant load the news page, one of the reasons is the exceeded call limit, it takes a day to restore the limit.
+# Login 123@123 Password 12345
 # The technologies main I used in this project are React, Redux, MUI, axios, typescript. List of all technologies with versions are below:
     axios": "^1.3.3",
     gh-pages": "^5.0.0",
