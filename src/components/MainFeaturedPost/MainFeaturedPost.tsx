@@ -15,9 +15,7 @@ interface MainFeaturedPostProps {
   };
 }
 
-export default function MainFeaturedPost(props: MainFeaturedPostProps) {
-  const { post } = props;
-
+export const MainFeaturedPost: React.FC<MainFeaturedPostProps> = ({ post }) => {
   return (
     <Paper
       sx={{
@@ -65,4 +63,4 @@ export default function MainFeaturedPost(props: MainFeaturedPostProps) {
       </Grid>
     </Paper>
   );
-}
+};

@@ -2,16 +2,14 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import Markdown from '../Markdown/Markdown';
+import { Markdown } from '../Markdown/Markdown';
 
 interface MainProps {
   posts: ReadonlyArray<string>;
   title: string;
 }
 
-export default function Main(props: MainProps) {
-  const { posts, title } = props;
-
+export const Main: React.FC<MainProps> = ({ posts, title }) => {
   return (
     <Grid
       item
@@ -34,4 +32,4 @@ export default function Main(props: MainProps) {
       ))}
     </Grid>
   );
-}
+};

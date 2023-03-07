@@ -13,7 +13,10 @@ import {
   MenuItem,
   Pagination,
   Theme,
-  Typography
+  Typography,
+  CircularProgress,
+  Backdrop,
+  Modal
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import React, { useCallback } from 'react';
@@ -27,7 +30,6 @@ import ShareIcon from '@mui/icons-material/Share';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box } from '@material-ui/core';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import CircularProgress from '@mui/material/CircularProgress';
 import Delete from '@mui/icons-material/Delete';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,6 +38,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paginationBlock: {
     marginTop: theme.spacing(2)
+  },
+  card: {
+    maxWidth: 600,
+    height: 600,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  },
+  actions: {
+    display: 'flex'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  progress: {
+    margin: theme.spacing(2)
   }
 }));
 
@@ -66,7 +86,10 @@ export const NewsPage: React.FC = () => {
   const loadNewsFromServer = useCallback(async () => {
     try {
       const latestNews = await getNews();
+      latestNews.slice(0, 25);
+
       setArticles(latestNews);
+      console.log(latestNews);
       setIsLoading(false);
     } catch {
       setIsLoading(false);
@@ -77,25 +100,34 @@ export const NewsPage: React.FC = () => {
   const deleteNewsHandler = (articleIndex: number) => {
     const filteredArticle = articles.filter((article, index) => index !== articleIndex);
     setArticles(filteredArticle);
-    console.log(filteredArticle);
   };
 
   useEffect(() => {
     loadNewsFromServer();
-  });
+  }, []);
 
   return (
     <>
       <Header />
       <main>
         {isLoading ? (
-          <CircularProgress />
+          <Modal
+            open={isLoading}
+            className={classes.modal}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 100
+            }}
+          >
+            <CircularProgress className={classes.progress} />
+          </Modal>
         ) : (
-          <Container sx={{ marginTop: '80px' }}>
+          <Container sx={{ marginTop: '80px', minHeight: 'calc(100vh - 135px - 64px)' }}>
             <Grid container spacing={3} className={classes.newsList}>
               {getItemsForPage().map((article, index) => (
-                <Grid item key={article.title} md={4}>
-                  <Card sx={{ maxWidth: 600, height: 650 }}>
+                <Grid item key={article.id} md={4}>
+                  <Card sx={{ maxWidth: 600, minHeight: 600 }} className={classes.card}>
                     <CardHeader
                       avatar={
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -108,25 +140,19 @@ export const NewsPage: React.FC = () => {
                         </IconButton>
                       }
                       title={article.title}
-                      subheader={article.publishedAt}
                     />
-                    {article.urlToImage && (
+                    {article.imageUrl && (
                       <CardMedia
                         component="img"
                         height="194"
-                        image={article.urlToImage}
+                        image={article.imageUrl}
                         alt="News image"
                       />
                     )}
                     <CardContent>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {article.title}
-                      </Typography>
-                    </CardContent>
-                    <CardContent>
                       <Typography paragraph>{article.content}</Typography>
                     </CardContent>
-                    <CardActions disableSpacing>
+                    <CardActions disableSpacing className={classes.actions}>
                       <IconButton aria-label="add to favorites">
                         <FavoriteIcon />
                       </IconButton>

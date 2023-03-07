@@ -6,10 +6,10 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { Header } from '../components/Header';
-import MainFeaturedPost from '../components/MainFeaturedPost/MainFeaturedPost';
+import { MainFeaturedPost } from '../components/MainFeaturedPost/MainFeaturedPost';
 import { Footer } from '../components/Footer';
 import { FeaturedPost } from '../components/FeaturedPost';
-import Main from '../components/Main/Main';
+import { Main } from '../components/Main/Main';
 import Sidebar from '../components/Sidebar/Sidebar';
 
 const mainFeaturedPost = {

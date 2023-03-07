@@ -1,9 +1,6 @@
 # Demolink
-https://fispil.github.io/news_react_mui_redux/
-# Perhaps you cant load the news page, one of the reasons is the exceeded call limit, it takes a day to restore the limit. Its look like this
-![image](https://user-images.githubusercontent.com/110057267/223205976-46767f8a-9596-4fc1-b63c-eae726bc2790.png)
-
-# Login 123@123 Password 12345
+  https://fispil.github.io/news_react_mui_redux/
+# Perhaps you cant load the news page, one of the reasons is the exceeded call limit, it takes a day to restore the limit.
 # The technologies main I used in this project are React, Redux, MUI, axios, typescript. List of all technologies with versions are below:
     axios": "^1.3.3",
     gh-pages": "^5.0.0",
@@ -34,7 +31,7 @@ In the project directory, you can run:
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
+git
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
