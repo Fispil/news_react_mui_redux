@@ -16,7 +16,9 @@ import {
   Typography,
   CircularProgress,
   Backdrop,
-  Modal
+  Modal,
+  BottomNavigation,
+  BottomNavigationAction
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import React, { useCallback } from 'react';
@@ -26,11 +28,16 @@ import { Header } from '../components/Header';
 import { getNews } from '../utilitys/fetchNews';
 import { Article } from '../types/Article';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShareIcon from '@mui/icons-material/Share';
+import RestoreIcon from '@mui/icons-material/Restore';
+import HomeIcon from '@mui/icons-material/Home';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box } from '@material-ui/core';
+import { Box, useMediaQuery } from '@material-ui/core';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Delete from '@mui/icons-material/Delete';
+import Menu from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   newsList: {
@@ -56,6 +63,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   progress: {
     margin: theme.spacing(2)
+  },
+  pagginationcontainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    margin: '16px 0'
+  },
+  mobilebottomnavigation: {
+    width: '100%',
+    position: 'fixed',
+    bottom: '0'
   }
 }));
 
@@ -64,6 +83,8 @@ export const NewsPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage, setitemsPerPage] = useState('9');
   const [isLoading, setIsLoading] = useState(true);
+  const [currentSelectedItem, setCurrentSelectedItem] = React.useState(0);
+  const matches = useMediaQuery('(min-width:500px)');
 
   const handleItemsPerPageChange = (event: SelectChangeEvent) => {
     setitemsPerPage(event.target.value as string);
@@ -108,71 +129,64 @@ export const NewsPage: React.FC = () => {
 
   return (
     <>
-      <Header />
+      {matches && <Header />}
       <main>
-        {isLoading ? (
-          <Modal
-            open={isLoading}
-            className={classes.modal}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 100
-            }}
-          >
-            <CircularProgress className={classes.progress} />
-          </Modal>
-        ) : (
-          <Container sx={{ marginTop: '80px', minHeight: 'calc(100vh - 135px - 64px)' }}>
-            <Grid container spacing={3} className={classes.newsList}>
-              {getItemsForPage().map((article, index) => (
-                <Grid item key={article.id} md={4}>
-                  <Card sx={{ maxWidth: 600, minHeight: 600 }} className={classes.card}>
-                    <CardHeader
-                      avatar={
-                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                          R
-                        </Avatar>
-                      }
-                      action={
-                        <IconButton onClick={() => deleteNewsHandler(index)}>
-                          <Delete />
-                        </IconButton>
-                      }
-                      title={article.title}
-                    />
-                    {article.imageUrl && (
-                      <CardMedia
-                        component="img"
-                        height="194"
-                        image={article.imageUrl}
-                        alt="News image"
-                      />
-                    )}
-                    <CardContent>
-                      <Typography paragraph>{article.content}</Typography>
-                    </CardContent>
-                    <CardActions disableSpacing className={classes.actions}>
-                      <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
-                      </IconButton>
-                      <IconButton aria-label="share">
-                        <ShareIcon />
-                      </IconButton>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Grid
-              container
-              alignItems="center"
-              className={classes.newsList}
-              sx={{ justifyContent: 'center', margin: '10px 0' }}
-              spacing={3}
+        <Container sx={{ marginTop: '80px', minHeight: 'calc(100vh - 135px - 64px)' }}>
+          {isLoading ? (
+            <Modal
+              open={isLoading}
+              className={classes.modal}
+              closeAfterTransition
+              BackdropComponent={Backdrop}
+              BackdropProps={{
+                timeout: 100
+              }}
             >
-              <Grid item xs={1}>
+              <CircularProgress className={classes.progress} />
+            </Modal>
+          ) : (
+            <Container>
+              <Grid container spacing={3} className={classes.newsList}>
+                {getItemsForPage().map((article, index) => (
+                  <Grid item key={article.id} md={4}>
+                    <Card sx={{ maxWidth: 600, minHeight: 650 }} className={classes.card}>
+                      <CardHeader
+                        avatar={
+                          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                            R
+                          </Avatar>
+                        }
+                        action={
+                          <IconButton onClick={() => deleteNewsHandler(index)}>
+                            <Delete />
+                          </IconButton>
+                        }
+                        title={article.title}
+                      />
+                      {article.imageUrl && (
+                        <CardMedia
+                          component="img"
+                          height="194"
+                          image={article.imageUrl}
+                          alt="News image"
+                        />
+                      )}
+                      <CardContent>
+                        <Typography paragraph>{article.content}</Typography>
+                      </CardContent>
+                      <CardActions disableSpacing className={classes.actions}>
+                        <IconButton aria-label="add to favorites">
+                          <FavoriteIcon />
+                        </IconButton>
+                        <IconButton aria-label="share">
+                          <ShareIcon />
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+              <Box className={classes.pagginationcontainer}>
                 <Box>
                   <FormControl>
                     <InputLabel id="select__items_per_page">Items</InputLabel>
@@ -189,20 +203,66 @@ export const NewsPage: React.FC = () => {
                     </Select>
                   </FormControl>
                 </Box>
-              </Grid>
-              <Grid item xs={5}>
-                <Pagination
-                  count={totalPages}
-                  page={page}
-                  onChange={handlePageChange}
-                  size="large"
-                />
-              </Grid>
-            </Grid>
-          </Container>
-        )}
+
+                <Box>
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    size="large"
+                  />
+                </Box>
+              </Box>
+            </Container>
+          )}
+        </Container>
       </main>
-      <Footer />
+      {matches ? (
+        <Footer />
+      ) : (
+        <Box className={classes.mobilebottomnavigation}>
+          <BottomNavigation
+            showLabels
+            value={currentSelectedItem}
+            onChange={(event, newValue) => {
+              setCurrentSelectedItem(newValue);
+            }}
+          >
+            <BottomNavigationAction label="Menu" icon={<Menu />} />
+            <BottomNavigationAction
+              label={
+                <Link
+                  to="/"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    fontSize: '20px'
+                  }}
+                >
+                  Home
+                </Link>
+              }
+              icon={<HomeIcon />}
+            />
+            <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+            <BottomNavigationAction
+              label={
+                <Link
+                  to="/profile"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    fontSize: '20px'
+                  }}
+                >
+                  MyProfile
+                </Link>
+              }
+              icon={<AccountCircleIcon />}
+            />
+          </BottomNavigation>
+        </Box>
+      )}
     </>
   );
 };

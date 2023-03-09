@@ -43,13 +43,11 @@ export const Header: React.FC = () => {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: '2'
               }}
             >
               <PopUpMenu />
-              <Typography variant="h6" sx={{ color: theme.palette.primary.light, flexShrink: 1 }}>
-                {t('menu.menu')}
-              </Typography>
             </Box>
 
             <Link
