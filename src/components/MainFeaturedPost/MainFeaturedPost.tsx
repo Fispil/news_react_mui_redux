@@ -4,15 +4,10 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import { MainPost } from '../../types/Article';
 
 interface MainFeaturedPostProps {
-  post: {
-    description: string;
-    image: string;
-    imageText: string;
-    linkText: string;
-    title: string;
-  };
+  post: MainPost;
 }
 
 export const MainFeaturedPost: React.FC<MainFeaturedPostProps> = ({ post }) => {

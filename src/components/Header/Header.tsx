@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="fixed">
+    <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', flexShrink: 1 }}>
           <Box

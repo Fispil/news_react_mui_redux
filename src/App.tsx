@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Blog } from './pages/BlogPage';
+import { MainPage } from './pages/MainPage';
 import { AboutPage } from './pages/AboutPage';
 import { NewsPage } from './pages/NewsPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -22,7 +22,7 @@ export const App: React.FC = () => {
       )}
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<Blog />} />
+      <Route path="/" element={<MainPage />} />
     </Routes>
   );
 };

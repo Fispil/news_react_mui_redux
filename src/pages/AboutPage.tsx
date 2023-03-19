@@ -1,28 +1,23 @@
 import { Box, Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
 import { Header } from '../components/Header/Header';
 import { Footer } from '../components/Footer/Footer';
 import { theme } from '../theme';
-import BreakingNewsImage from '../pictures/breaking_News.png';
-import { NewsReviewCard } from '../components/NewsCard';
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const useStyles = makeStyles({
+  about: {
+    marginTop: '40px',
+    color: theme.palette.common.black
+  }
+});
 
 export const AboutPage: React.FC = () => {
+  const classes = useStyles();
   return (
     <>
       <Header />
       <main>
-        <Paper
-          sx={{
-            marginTop: '64px',
-            color: theme.palette.common.black,
-            backgroundImage: `url(${Image})`,
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            height: '100vh'
-          }}
-        >
+        <Paper className={classes.about}>
           <Container fixed>
             <Grid container>
               <Grid item md={12} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -36,10 +31,6 @@ export const AboutPage: React.FC = () => {
                   >
                     Honest and non-bribery news.
                   </Typography>
-                  <img
-                    src={BreakingNewsImage}
-                    style={{ float: 'right', minWidth: '150px', maxWidth: '600px' }}
-                  ></img>
                   <Typography
                     variant="h6"
                     color={theme.palette.common.black}
@@ -91,7 +82,7 @@ export const AboutPage: React.FC = () => {
             </Grid>
           </Container>
         </Paper>
-        <Box sx={{ marginTop: '40px' }}>
+        <Box sx={{ margin: '40px 0' }}>
           <Container maxWidth="md">
             <Typography variant="h2" align="center" color="textPrimary" gutterBottom>
               News
@@ -117,15 +108,6 @@ export const AboutPage: React.FC = () => {
             </Box>
           </Container>
         </Box>
-        <Container sx={{ marginTop: '40px' }}>
-          <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card}>
-                <NewsReviewCard card={card} />
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
       </main>
       <Footer />
     </>

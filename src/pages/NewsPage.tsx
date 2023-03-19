@@ -26,7 +26,7 @@ import { useState, useEffect } from 'react';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { getNews } from '../utilitys/fetchNews';
-import { Article } from '../types/Article';
+import { Article, FeaturedPosts, MainPost } from '../types/Article';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ShareIcon from '@mui/icons-material/Share';
@@ -36,12 +36,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, useMediaQuery } from '@material-ui/core';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Delete from '@mui/icons-material/Delete';
-import Menu from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../utilitys/hooks';
+import { PopUpMenu } from '../components/PopUpMenu';
+import { FeaturedPost } from '../components/FeaturedPost';
+import { MainFeaturedPost } from '../components/MainFeaturedPost';
 
 const useStyles = makeStyles((theme: Theme) => ({
   newsList: {
-    marginTop: theme.spacing(2)
+    marginTop: '40px',
+    '@media (max-width:600px)': {
+      marginTop: 0
+    }
+  },
+  feauredPostList: {
+    marginTop: '40px'
   },
   paginationBlock: {
     marginTop: theme.spacing(2)
@@ -73,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   mobilebottomnavigation: {
     width: '100%',
-    position: 'fixed',
+    position: 'sticky',
     bottom: '0'
   }
 }));
@@ -81,10 +90,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const NewsPage: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [page, setPage] = useState(1);
-  const [itemsPerPage, setitemsPerPage] = useState('9');
+  const [itemsPerPage, setitemsPerPage] = useState('12');
   const [isLoading, setIsLoading] = useState(true);
-  const [currentSelectedItem, setCurrentSelectedItem] = React.useState(0);
+  const [currentSelectedItem, setCurrentSelectedItem] = useState(0);
+  const [mainFeaturedPost, setMainFeaturedPost] = useState<MainPost>({
+    title: '',
+    description: '',
+    image: '',
+    imageText: 'main image description',
+    linkText: 'Continue reading…'
+  });
+  const [visibleArticles, setVisibleArticles] = useState<Article[]>([]);
+  const [featuredPosts, setFeaturedPosts] = useState<FeaturedPosts[]>([]);
   const matches = useMediaQuery('(min-width:500px)');
+  const userIsLoggined = useAppSelector((state) => state.user.isLoggined);
 
   const handleItemsPerPageChange = (event: SelectChangeEvent) => {
     setitemsPerPage(event.target.value as string);
@@ -98,23 +117,20 @@ export const NewsPage: React.FC = () => {
 
   const totalPages = Math.ceil(articles.length / +itemsPerPage);
 
-  const getItemsForPage = (): Article[] => {
+  const getItemsForPage = useCallback((): Article[] => {
     const startIndex = (page - 1) * +itemsPerPage;
     const endIndex = startIndex + +itemsPerPage;
     return articles.slice(startIndex, endIndex);
-  };
+  }, [articles, itemsPerPage, page]);
 
   const loadNewsFromServer = useCallback(async () => {
     try {
       const latestNews = await getNews();
-      latestNews.slice(0, 25);
-
       setArticles(latestNews);
-      console.log(latestNews);
       setIsLoading(false);
-    } catch {
+    } catch (err) {
       setIsLoading(false);
-      throw new Error('Api call limit exceeded');
+      throw new Error(`Api call limit exceeded: ${err}`);
     }
   }, []);
 
@@ -127,28 +143,86 @@ export const NewsPage: React.FC = () => {
     loadNewsFromServer();
   }, []);
 
+  useEffect(() => {
+    const allVisibleArticles = getItemsForPage();
+    setVisibleArticles(allVisibleArticles);
+  }, [getItemsForPage]);
+
+  useEffect(() => {
+    if (articles.length) {
+      const latestFeatredMainPost = {
+        title: articles[0].title,
+        description: articles[0].content,
+        image: articles[0].imageUrl,
+        imageText: 'main image description',
+        linkText: 'Continue reading…'
+      };
+
+      const latestFeaterdPost = [
+        {
+          title: articles[4].title,
+          date: articles[4].date,
+          description: articles[4].content,
+          image: articles[4].imageUrl,
+          imageLabel: 'Image Text'
+        },
+        {
+          title: articles[5].title,
+          date: articles[5].date,
+          description: articles[5].content,
+          image: articles[5].imageUrl,
+          imageLabel: 'Image Text'
+        }
+      ];
+
+      setMainFeaturedPost(latestFeatredMainPost);
+
+      setFeaturedPosts(latestFeaterdPost);
+    }
+  }, [articles]);
+
   return (
     <>
       {matches && <Header />}
-      <main>
-        <Container sx={{ marginTop: '80px', minHeight: 'calc(100vh - 135px - 64px)' }}>
-          {isLoading ? (
-            <Modal
-              open={isLoading}
-              className={classes.modal}
-              closeAfterTransition
-              BackdropComponent={Backdrop}
-              BackdropProps={{
-                timeout: 100
-              }}
-            >
-              <CircularProgress className={classes.progress} />
-            </Modal>
-          ) : (
-            <Container>
-              <Grid container spacing={3} className={classes.newsList}>
-                {getItemsForPage().map((article, index) => (
-                  <Grid item key={article.id} md={4}>
+      <Container
+        component="main"
+        sx={{
+          marginTop: '40px',
+          minHeight: 'calc(100vh - 135px - 64px)',
+          '@media (max-width:600px)': {
+            marginTop: '32px'
+          }
+        }}
+        maxWidth="xl"
+      >
+        {isLoading ? (
+          <Modal
+            open={isLoading}
+            className={classes.modal}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 100
+            }}
+          >
+            <CircularProgress className={classes.progress} />
+          </Modal>
+        ) : (
+          <Container maxWidth="xl">
+            <Box sx={{ maxHeight: '360' }}>
+              <MainFeaturedPost post={mainFeaturedPost} />
+            </Box>
+            <Box className={classes.feauredPostList}>
+              <Grid container spacing={3}>
+                {featuredPosts.map((post) => (
+                  <FeaturedPost key={post.title} post={post} />
+                ))}
+              </Grid>
+            </Box>
+            <Box className={classes.newsList}>
+              <Grid container spacing={3}>
+                {visibleArticles.map((article, index) => (
+                  <Grid item key={article.id} xs={12} sm={6} md={3}>
                     <Card sx={{ maxWidth: 600, minHeight: 650 }} className={classes.card}>
                       <CardHeader
                         avatar={
@@ -186,37 +260,38 @@ export const NewsPage: React.FC = () => {
                   </Grid>
                 ))}
               </Grid>
-              <Box className={classes.pagginationcontainer}>
-                <Box>
-                  <FormControl>
-                    <InputLabel id="select__items_per_page">Items</InputLabel>
-                    <Select
-                      labelId="select__items_per_page"
-                      id="selector__items_per_page"
-                      value={itemsPerPage}
-                      label="itemsPerPage"
-                      onChange={handleItemsPerPageChange}
-                    >
-                      <MenuItem value={9}>9</MenuItem>
-                      <MenuItem value={12}>12</MenuItem>
-                      <MenuItem value={15}>15</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
+            </Box>
 
-                <Box>
-                  <Pagination
-                    count={totalPages}
-                    page={page}
-                    onChange={handlePageChange}
-                    size="large"
-                  />
-                </Box>
+            <Box className={classes.pagginationcontainer}>
+              <Box>
+                <FormControl>
+                  <InputLabel id="select__items_per_page">Items</InputLabel>
+                  <Select
+                    labelId="select__items_per_page"
+                    id="selector__items_per_page"
+                    value={itemsPerPage}
+                    label="itemsPerPage"
+                    onChange={handleItemsPerPageChange}
+                  >
+                    <MenuItem value={9}>9</MenuItem>
+                    <MenuItem value={12}>12</MenuItem>
+                    <MenuItem value={15}>15</MenuItem>
+                  </Select>
+                </FormControl>
               </Box>
-            </Container>
-          )}
-        </Container>
-      </main>
+
+              <Box>
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={handlePageChange}
+                  size="large"
+                />
+              </Box>
+            </Box>
+          </Container>
+        )}
+      </Container>
       {matches ? (
         <Footer />
       ) : (
@@ -228,7 +303,19 @@ export const NewsPage: React.FC = () => {
               setCurrentSelectedItem(newValue);
             }}
           >
-            <BottomNavigationAction label="Menu" icon={<Menu />} />
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                flexGrow: '1',
+                height: '55px'
+              }}
+            >
+              <PopUpMenu />
+              <Typography sx={{ textAlign: 'center' }}>Menu</Typography>
+            </Box>
             <BottomNavigationAction
               label={
                 <Link
@@ -236,7 +323,7 @@ export const NewsPage: React.FC = () => {
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
-                    fontSize: '20px'
+                    fontSize: '16px'
                   }}
                 >
                   Home
@@ -247,16 +334,29 @@ export const NewsPage: React.FC = () => {
             <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
             <BottomNavigationAction
               label={
-                <Link
-                  to="/profile"
-                  style={{
-                    textDecoration: 'none',
-                    color: 'inherit',
-                    fontSize: '20px'
-                  }}
-                >
-                  MyProfile
-                </Link>
+                userIsLoggined ? (
+                  <Link
+                    to="/profile"
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      fontSize: '16px'
+                    }}
+                  >
+                    MyProfile
+                  </Link>
+                ) : (
+                  <Link
+                    to="/signin"
+                    style={{
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      fontSize: '16px'
+                    }}
+                  >
+                    SignIn
+                  </Link>
+                )
               }
               icon={<AccountCircleIcon />}
             />

@@ -1,4 +1,4 @@
-import { Typography, Container, Box, makeStyles, useMediaQuery } from '@material-ui/core';
+import { Typography, Container, Box, makeStyles } from '@material-ui/core';
 import FolderIcon from '@mui/icons-material/Folder';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -34,8 +34,8 @@ export const Footer = () => {
           <Grid container>
             <Grid item md={12} xs={12}>
               <BottomNavigation
-                sx={{ bgcolor: theme.palette.primary.dark }}
                 showLabels
+                sx={{ bgcolor: theme.palette.primary.dark }}
                 value={value}
                 onChange={(event, newValue) => {
                   setValue(newValue);

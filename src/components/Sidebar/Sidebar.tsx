@@ -10,25 +10,23 @@ interface SidebarProps {
     url: string;
     title: string;
   }>;
-  description: string;
+  description: string | null;
   social: ReadonlyArray<{
     icon: React.ElementType;
     name: string;
   }>;
-  title: string;
+  title: string | null;
 }
 
-export default function Sidebar(props: SidebarProps) {
-  const { archives, description, social, title } = props;
-
+export const Sidebar: React.FC<SidebarProps> = ({ archives, description, social, title }) => {
   return (
     <Grid item xs={12} md={4}>
-      <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.200' }}>
-        <Typography variant="h6" gutterBottom>
-          {title}
-        </Typography>
-        <Typography>{description}</Typography>
-      </Paper>
+      {title && description && (
+        <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.200' }}>
+          <Typography variant="h6">{title}</Typography>
+          <Typography>{description}</Typography>
+        </Paper>
+      )}
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         Archives
       </Typography>
@@ -50,4 +48,4 @@ export default function Sidebar(props: SidebarProps) {
       ))}
     </Grid>
   );
-}
+};
