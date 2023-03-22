@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/news_react_mui_redux/static/js/main.83f9e14d.js",
+    "main.js": "/news_react_mui_redux/static/js/main.4b99f05d.js",
     "index.html": "/news_react_mui_redux/index.html",
-    "main.83f9e14d.js.map": "/news_react_mui_redux/static/js/main.83f9e14d.js.map"
+    "main.4b99f05d.js.map": "/news_react_mui_redux/static/js/main.4b99f05d.js.map"
   },
   "entrypoints": [
-    "static/js/main.83f9e14d.js"
+    "static/js/main.4b99f05d.js"
   ]
 }
